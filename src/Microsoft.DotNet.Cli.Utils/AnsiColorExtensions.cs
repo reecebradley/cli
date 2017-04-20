@@ -46,7 +46,7 @@ namespace Microsoft.DotNet.Cli.Utils
 
         public static string Bold(this string text)
         {
-            return "\x1B[1m" + text + "\x1B[22m";
+            return "\x1B[1m" + text + "\x1B[39m";
         }
     }
 }
