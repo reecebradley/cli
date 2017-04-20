@@ -48,5 +48,10 @@ namespace Microsoft.DotNet.Cli.Utils
         {
             return "\x1B[1m" + text + "\x1B[39m";
         }
+
+        public static string NotBold(this string text)
+        {
+            return "\x1B[22m" + text + "\x1B[39m";
+        }
     }
 }

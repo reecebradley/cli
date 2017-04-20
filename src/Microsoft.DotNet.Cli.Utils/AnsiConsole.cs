@@ -15,7 +15,7 @@ namespace Microsoft.DotNet.Cli.Utils
             OriginalForegroundColor = Console.ForegroundColor;
         }
     
-        private int _boldRecursion;
+        private bool _isBold;
     
         public static AnsiConsole GetOutput()
         {
@@ -36,22 +36,17 @@ namespace Microsoft.DotNet.Cli.Utils
             const int Light = 0x08;
             int c = (int)color;
 
-            Console.ForegroundColor = 
+            Console.ForegroundColor =
                 c < 0 ? color :                                   // unknown, just use it
-                _boldRecursion > 0 ? (ConsoleColor)(c | Light) :  // ensure color is light
+                _isBold ? (ConsoleColor)(c | Light) :             // ensure color is light
                 (ConsoleColor)(c & ~Light);                       // ensure color is dark
         }
     
         private void SetBold(bool bold)
         {
-            _boldRecursion += bold ? 1 : -1;
-            if (_boldRecursion > 1 || (_boldRecursion == 1 && !bold))
-            {
-                return;
-            }
-            
-            // switches on _boldRecursion to handle boldness
-            SetColor(Console.ForegroundColor);        
+            _isBold = bold;
+
+            SetColor(Console.ForegroundColor);     
         }
 
         public void WriteLine(string message)
@@ -130,6 +125,7 @@ namespace Microsoft.DotNet.Cli.Utils
                                         SetColor(ConsoleColor.Gray);
                                         break;
                                     case 39:
+                                        _isBold = false;
                                         Console.ForegroundColor = OriginalForegroundColor;
                                         break;
                                 }
